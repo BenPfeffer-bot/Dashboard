@@ -1,18 +1,6 @@
 import streamlit as st
 import pandas as pd
-# Import plotly express module, or install it if not already available
-# Import plotly express module, or install it if not already available
-# try:
-#     import plotly.express as plotly_express
-# except ImportError:
-#     try:
-#         import subprocess
-#         subprocess.check_call(['pip', 'install', 'plotly-express'])
-#         import plotly.express as plotly_express
-#     except Exception as e:
-#         print("Failed to install plotly-express:", e)
-
-import plotly.express as px
+import altair as alt
 import json
 import os
 from datetime import datetime, date
@@ -298,27 +286,37 @@ def render_summary():
 
     with col1:
         st.subheader("Task Types Distribution")
-        type_counts = st.session_state.tasks['Type'].value_counts()
+        type_counts = st.session_state.tasks['Type'].value_counts().reset_index()
+        type_counts.columns = ['Type', 'Count']
         if not type_counts.empty:
-            fig_types = px.pie(values=type_counts.values, names=type_counts.index, title="Task Types",
-                               color_discrete_sequence=px.colors.qualitative.Set3)
-            fig_types.update_traces(textposition='inside', textinfo='percent+label')
-            fig_types.update_layout(uniformtext_minsize=12, uniformtext_mode='hide')
-            st.plotly_chart(fig_types, use_container_width=True)
+            # Create a pie chart using Altair
+            pie_chart = alt.Chart(type_counts).mark_arc().encode(
+                theta=alt.Theta(field="Count", type="quantitative"),
+                color=alt.Color(field="Type", type="nominal"),
+                tooltip=["Type", "Count"]
+            ).properties(
+                title="Task Types Distribution"
+            )
+            st.altair_chart(pie_chart, use_container_width=True)
         else:
             st.info("No data for Task Types chart.")
 
     with col2:
         st.subheader("Completion Status")
         completion_data = st.session_state.tasks['Completion'].value_counts().reset_index()
+        completion_data.columns = ['Status', 'Count']
         if not completion_data.empty:
-            completion_data.columns = ['Status', 'Count']
             completion_data['Percentage'] = completion_data['Count'] / completion_data['Count'].sum() * 100
-            fig_completion = px.bar(completion_data, x='Status', y='Count', text='Percentage', title="Task Completion Status",
-                                    color='Status', color_discrete_map={'C1': '#ef4444', 'C2': '#f97316', 'C3': '#eab308', 'D': '#22c55e'})
-            fig_completion.update_traces(texttemplate='%{text:.1f}%', textposition='outside')
-            fig_completion.update_layout(uniformtext_minsize=8, uniformtext_mode='hide')
-            st.plotly_chart(fig_completion, use_container_width=True)
+            # Create a bar chart using Altair
+            bar_chart = alt.Chart(completion_data).mark_bar().encode(
+                x=alt.X('Status:N', sort=None),
+                y=alt.Y('Count:Q'),
+                color=alt.Color('Status:N', scale=alt.Scale(domain=list(COMPLETION_STAGES.keys()), range=list(COMPLETION_STAGES.values()))),
+                tooltip=['Status', 'Count', alt.Tooltip('Percentage:Q', format='.1f')]
+            ).properties(
+                title="Task Completion Status"
+            )
+            st.altair_chart(bar_chart, use_container_width=True)
         else:
             st.info("No data for Completion Status chart.")
 
