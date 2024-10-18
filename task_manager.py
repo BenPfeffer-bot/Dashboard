@@ -12,7 +12,7 @@ import pandas as pd
 #     except Exception as e:
 #         print("Failed to install plotly-express:", e)
 
-# import plotly.express as px
+import plotly.express as px
 import json
 import os
 from datetime import datetime, date
