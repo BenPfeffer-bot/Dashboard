@@ -10,7 +10,7 @@ import streamlit.components.v1 as components
 st.set_page_config(page_title="Luki's Task Manager", page_icon="📋", layout="wide", initial_sidebar_state="expanded")
 
 # Constants
-DATA_FILE = 'Task Manager/tasks_data.json'
+DATA_FILE = 'tasks_data.json'
 PRIORITY_COLORS = {'P1': '#ef4444', 'P2': '#f97316', 'P3': '#22c55e', 'ASAP': '#8b5cf6'}
 COMPLETION_STAGES = {'C1': 25, 'C2': 50, 'C3': 75, 'D': 100}
 
