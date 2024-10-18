@@ -1,17 +1,18 @@
 import streamlit as st
 import pandas as pd
 # Import plotly express module, or install it if not already available
-try:
-    import plotly.express as plotly_express
-except ImportError:
-    try:
-        import subprocess
-        subprocess.check_call(['pip', 'install', 'plotly-express'])
-        import plotly.express as plotly_express
-    except Exception as e:
-        print("Failed to install plotly-express:", e)
+# Import plotly express module, or install it if not already available
+# try:
+#     import plotly.express as plotly_express
+# except ImportError:
+#     try:
+#         import subprocess
+#         subprocess.check_call(['pip', 'install', 'plotly-express'])
+#         import plotly.express as plotly_express
+#     except Exception as e:
+#         print("Failed to install plotly-express:", e)
 
-import plotly.express as px
+# import plotly.express as px
 import json
 import os
 from datetime import datetime, date
